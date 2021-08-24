@@ -2,7 +2,6 @@ import os
 import pygame
 import pygame.locals as pygame_locals
 
-# import time as t
 # from joy import Joystick
 
 # joysticks = []
@@ -24,6 +23,7 @@ AIR_RESISTANCE = 5
 JUMP_ACC = 650
 GRAVITY = 100000/TICKS
 
+
 def add_line(screen, text, x, y):
     # used to print the status of the variables
     text = font.render(text, True, 'white') 
@@ -31,12 +31,26 @@ def add_line(screen, text, x, y):
     text_rect.topleft = (x, y)
     screen.blit(text, text_rect)
 
+
 # player characteristics
 PLAYER_HEIGHT, PLAYER_WIDTH = 40, 20
 PLAYER_COLOR = (0, 255, 255)  # (Red, Green, Blue) 0 - 255
 MOVE_ACC = 400
 
 SURFACE_SZ = 680   # Desired physical surface size, in pixels.
+
+
+class Platforms(list):
+    """Collection of platforms"""
+
+    def __init__(self, scroll=0):
+        self.scroll = scroll
+
+    def update(self):
+        """Update all platforms"""
+        for item in self:
+            item.scroll = self.scroll
+            item.update()
 
 
 class Wall(pygame.sprite.Sprite):
@@ -338,7 +352,7 @@ def run():
     won = False
     scroll = 0
     wallheight = 20
-    platforms = []
+    platforms = Platforms()
     platforms.append(Wall(0, 100, 60, wallheight, scroll))
     platforms.append(Wall(100, 200, 20, 120, scroll, bouncy=1000, color=(0, 200, 0)))
     platforms.append(Wall(0, 300, 100, 20, scroll))
@@ -371,10 +385,14 @@ def run():
     clock = pygame.time.Clock()
 
     game_running = True
+    total_ticks = 0
     while game_running:
-        
-        l = player.xpos
-        
+
+        # update the position of the platforms
+        if not (total_ticks % 10):
+            platforms.scroll += 1
+            platforms.update()
+
         for event in pygame.event.get():
             if event.type == pygame_locals.QUIT:
                 print('quitting...')
@@ -395,13 +413,11 @@ def run():
 
         # We draw everything from scratch on each frame.
         # So first fill everything with the background color
-        
-        
         screen.fill((0, 200, 200))
         
-        if player.xpos > SURFACE_SZ - l:
-            won = True
-                
+        # if player.xpos > SURFACE_SZ - l:
+            # won = True
+
         if won == True:
             text_surface = game_font.render('You won!', True,
                                             (255, 255, 255))
@@ -419,13 +435,13 @@ def run():
         else:
             all_sprites.update()
             all_sprites.draw(screen)
-        
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.update()
 
         # Limit to TICKS frames per second
         clock.tick(TICKS)
+        total_ticks += 1
 
     pygame.quit()     # Once we leave the loop, close the window.
 
