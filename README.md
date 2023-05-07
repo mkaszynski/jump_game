@@ -30,3 +30,5 @@ The game is simple and easy to play. The white platforms are normal, while the g
 This game was originally created by my father, and I added a new map and additional features to make it more fun to play.
 
 We hope you enjoy playing Jump Game!
+
+![Alt Text](./your_gif.gif)
