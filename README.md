@@ -31,4 +31,4 @@ This game was originally created by my father, and I added a new map and additio
 
 We hope you enjoy playing Jump Game!
 
-![Alt Text](./your_gif.gif)
+![Alt Text](./preview.gif)
